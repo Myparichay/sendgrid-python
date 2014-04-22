@@ -1,39 +1,74 @@
 # SendGrid-Python #
-This library allows you to quickly and easily send emails through SendGrid using Python.
+This library allows you to quickly and easily use SendGrid API using Python.
 
-[![Build Status](https://travis-ci.org/sendgrid/sendgrid-python.png?branch=master)](https://travis-ci.org/sendgrid/sendgrid-python)
-
-**Warning!** This library was recently updated to bring it up to date with all of our other libraries. It behaves completely different from the previous release. Also, SMTP has been deprecated in support for the Web API.
-
-## Install
-
-```bash
-pip install sendgrid
-# or
-easy_install sendgrid
-```
 
 ## Example
 
 ```python
 import sendgrid
 
-sg = sendgrid.SendGridClient('YOUR_SENDGRID_USERNAME', 'YOUR_SENDGRID_PASSWORD')
+sg = sendgrid.SendGridClient('YOUR_SENDGRID_USERNAME','YOUR_SENDGRID_PASSWORD',endpoint="/api/stats.get.json")
 
-message = sendgrid.Mail()
-message.add_to('John Doe <john@email.com>')
-message.set_subject('Example')
-message.set_html('Body')
-message.set_text('Body')
-message.set_from('Doe John <doe@email.com>')
-status, msg = sg.send(message)
+
+## example for General Statistics
+
+general_st = sendgrid.GeneralStatistics()
+general_st.set_days(2)
+general_st.set_start_date("2014-04-14")
+general_st.set_end_date("2014-04-20")
+general_st.set_aggregate(0)
+general_st.set_category("WebD:CampId:3100")
+status, msg = sg.send(general_st)
+
 
 #or
+general_st = sendgrid.GeneralStatistics(days=2,start_date="2014-04-14",end_date="2014-04-20",
+                                aggregate=0,category="WebD:CampId:3100")
 
-message = sendgrid.Mail(to='john@email.com', subject='Example', html='Body', text='Body', from_email='doe@email.com')
-status, msg = sg.send(message)
+status, msg = sg.send(general_st)
+
+## example for Advanced Statistics
+
+#Note: Mandatory Parameters : data_type and start_date
+#By default data_type will be global and start_date will be set as current date
+
+advanced_st = sendgrid.AdvancedStatistics()
+    
+
+advanced_st.set_data_type("browsers")
+advanced_st.set_start_date("2014-02-14")
+advanced_st.set_end_date("2014-04-14")
+advanced_st.set_metric("bounce")
+advanced_st.set_category("WebD:CampId:3150")
+advanced_st.set_aggregated_by("day")
+advanced_st.set_country("US")
+status,msg = sg.send(advanced_st)
+
+#or
+advanced_st = sendgrid.AdvancedStatistics(data_type="global",start_date="2014-04-13",validate=True,end_date="2014-04-17",
+                                           metric="all",category="WebD:CampId:3100",aggregated_by="day",country="US")
+status,msg = sg.send(advanced_st)
 
 ```
+##Validation 
+By default set method will not validate the parameters
+however you can pass validate=True to GeneralStatistics or AdvancedStatistics
+constructor to validate the parameters before sending
+
+For Example:
+```python
+        general_st = sendgrid.GeneralStatistics(days=2,start_date="2014-04-14",end_date="2014-04-20",
+                                            aggregate=0,category="WebD:CampId:3100",validate=True)
+        status, msg = sg.send(general_st)
+        
+
+        advanced_st = sendgrid.AdvancedStatistics(data_type="global",start_date="2014-04-13",validate=True,end_date="2014-04-17",
+                                            metric="all",category="WebD:CampId:3100")
+        status,msg = sg.send(advanced_st)
+```
+
+
+
 
 ### Error handling
 
@@ -60,133 +95,101 @@ encouraged to set `raise_errors` to `True` for forwards compatibility.
 
 `SendGridError` is a base-class for all SendGrid-related exceptions.
 
-
-### Adding Recipients
-
-```python
-message = sendgrid.Mail()
-message.add_to('example@sendgrid.com')
-# or
-message.add_to('Example Dude <example@email.com>')
-# or
-message.add_to(['Example Dude <example@email.com>', 'john@email.com'])
-```
-
-### Adding BCC Recipients
+###### Methods for General Statistics
 
 ```python
-message = sendgrid.Mail()
-message.add_bcc('example@email.com')
-# or
-message.add_bcc(['Example Dude <example@email.com>', 'john@email.com'])
+general_st = sendgrid.GeneralStatistics()
+```
+### Setting the days
+```python
+general_st.set_days(2)
 ```
 
-### Setting the Subject
+### Setting the start_date
+```python
+general_st.set_start_date("2014-04-14")
+```
+
+### Setting the end_date
+```python
+general_st.set_end_date("2014-04-20")
+```
+
+### Setting the Aggregate
+```python
+general_st.set_aggregate(0)
+```
+
+### Setting the Category 
+```python
+general_st.set_category("WebD:CampId:3100")
+```
+
+
+### Add Categories
+```python
+general_st.add_category("WebD:CampId:3150")
+```
+
+
+
+###### Methods for Advanced Statistics
 
 ```python
-message = sendgrid.Mail()
-message.set_subject('Example')
+advanced_st = sendgrid.AdvancedStatistics(data_type="global", start_date="2014-04-14")
 ```
 
-### Set Text or HTML
-
+### Setting the data_type
 ```python
-message = sendgrid.Mail()
-message.set_text('Body')
-# or
-message.set_html('<html><body>Stuff, you know?</body></html>')
+advanced_st.set_data_type("browsers")
 ```
 
-### Set From
-
+### Setting Start date
 ```python
-message = sendgrid.Mail()
-message.set_from('example@email.com')
+advanced_st.set_start_date("2014-02-14")
 ```
 
-### Set ReplyTo
-
+### Setting end date
 ```python
-message = sendgrid.Mail()
-message.set_replyto('example@email.com')
+advanced_st.set_end_date("2014-04-14")
 ```
 
-### Set File Attachments
-
+### Setting Metric
 ```python
-message = sendgrid.Mail()
-message.add_attachment('stuff.txt', './stuff.txt')
-# or
-message.add_attachment('stuff.txt', open('./stuff.txt', 'rb'))
-# or
-message.add_attachment_stream('filename', 'somerandomcontentyouwant')
-# strings, unicode, or BytesIO streams
+advanced_st.set_metric("bounce")
 ```
 
-## SendGrid's  [X-SMTPAPI](http://sendgrid.com/docs/API_Reference/SMTP_API/)
-
-If you wish to use the X-SMTPAPI on your own app, you can use the [SMTPAPI Python library](https://github.com/sendgrid/smtpapi-python).
-
-There are implementations for setter methods too.
-
-### [Substitution](http://sendgrid.com/docs/API_Reference/SMTP_API/substitution_tags.html)
-
+### Setting Aggregated By
 ```python
-message = sendgrid.Mail()
-message.add_substitution("key", "value")
+advanced_st.set_aggregated_by("day")
 ```
 
-### [Section](http://sendgrid.com/docs/API_Reference/SMTP_API/section_tags.html)
-
+### Setting Category
+    Category Can be a String or a list of categories
 ```python
-message = sendgrid.Mail()
-message.add_section("section", "value")
+advanced_st.set_category("WebD:CampId:3150")
+advanced_st.set_category(["WebD:CampId:3150"])
 ```
 
-### [Category](http://sendgrid.com/docs/Delivery_Metrics/categories.html)
-
+### Setting Country
 ```python
-message = sendgrid.Mail()
-message.add_category("category")
+advanced_st.set_country("US")
 ```
 
-### [Unique Arguments](http://sendgrid.com/docs/API_Reference/SMTP_API/unique_arguments.html)
 
+### Add Category
 ```python
-message = sendgrid.Mail()
-message.add_unique_arg("key", "value")
+advanced_st.add_category(["WebD:CampId:3150"])
+advanced_st.add_category("WebD:CampId:3150")
 ```
 
-### [Filter](http://sendgrid.com/docs/API_Reference/SMTP_API/apps.html)
 
-```python
-message = sendgrid.Mail()
-message.add_filter("filter", "setting", "value")
-```
 
-## SMTP
 
-SMTP support has been deprecated from all of our libs. But for those whom still want to use it, here is an example:
-
-```python
-import smtplib
-from email.mime.text import MIMEText
-
-email = MIMEText("this is a text/plain email") # you can make this html too.
-
-email['Subject'] = 'This will be the subject'
-email['From'] = 'yamil@sendgrid.com'
-email['To'] = 'example@email.com'
-email['Cc'] = 'yamil.asusta@sendgrid.com, community@sendgrid.com' # this is comma separated field
-
-s = smtplib.SMTP('smtp.sendgrid.net', 587)
-s.login('SENDGRID_USER', 'SENDGRID_PASSWORD')
-s.sendmail(email['From'], [email['To']], email.as_string())
-```
 
 ### TODO:
 
-* Add support for CID
+* Add support for other APIs 
 
 ### Tests
 
