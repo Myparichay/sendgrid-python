@@ -4,13 +4,14 @@
     Author: Jinu P R
     CopyRight: My Parichay 2014. All Rights Reserved
 """
-
+import os
 
 import unittest2 as unittest
 
 import sendgrid
 
-SG_USER, SG_PWD = "myparichay", "s3ndgr!d"
+SG_USER, SG_PWD = os.getenv('SG_USER'), os.getenv('SG_PWD')
+
 
 class TestSendGrid(unittest.TestCase):
 
@@ -18,8 +19,8 @@ class TestSendGrid(unittest.TestCase):
         self.sg = sendgrid.SendGridToolkitClient(SG_USER,SG_PWD,endpoint="/api/stats.get.json")
 
     def test_default_values(self):
-        self.assertEqual(self.sg.username, "myparichay")
-        self.assertEqual(self.sg.password, "s3ndgr!d")
+        self.assertEqual(self.sg.username, os.getenv('SG_USER'))
+        self.assertEqual(self.sg.password, os.getenv('SG_PWD'))
         self.assertEqual(self.sg.endpoint, "/api/stats.get.json")
 
         self.general_st = sendgrid.GeneralStatistics()
