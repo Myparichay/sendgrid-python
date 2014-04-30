@@ -15,7 +15,7 @@ SG_USER, SG_PWD = "myparichay", "s3ndgr!d"
 class TestSendGrid(unittest.TestCase):
 
     def setUp(self):
-        self.sg = sendgrid.SendGridClient(SG_USER,SG_PWD,endpoint="/api/stats.get.json")
+        self.sg = sendgrid.SendGridToolkitClient(SG_USER,SG_PWD,endpoint="/api/stats.get.json")
 
     def test_default_values(self):
         self.assertEqual(self.sg.username, "myparichay")
@@ -110,7 +110,7 @@ class TestSendGrid(unittest.TestCase):
 
 class TestSendGridAdvancedStatistics(unittest.TestCase):
     def setUp(self):
-        self.sg = sendgrid.SendGridClient(SG_USER,SG_PWD,endpoint="/api/stats.getAdvanced.json")
+        self.sg = sendgrid.SendGridToolkitClient(SG_USER,SG_PWD,endpoint="/api/stats.getAdvanced.json")
         self.assertEqual(self.sg.username, "myparichay")
         self.assertEqual(self.sg.password, "s3ndgr!d")
         self.assertEqual(self.sg.endpoint, "/api/stats.getAdvanced.json")

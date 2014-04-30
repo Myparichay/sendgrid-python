@@ -7,7 +7,7 @@ This library allows you to quickly and easily use SendGrid API using Python.
 ```python
 import sendgrid
 
-sg = sendgrid.SendGridClient('YOUR_SENDGRID_USERNAME','YOUR_SENDGRID_PASSWORD',endpoint="/api/stats.get.json")
+sg = sendgrid.SendGridToolkitClient('YOUR_SENDGRID_USERNAME','YOUR_SENDGRID_PASSWORD',endpoint="/api/stats.get.json")
 
 
 ## example for General Statistics
@@ -73,14 +73,14 @@ For Example:
 ### Error handling
 
 By default, `.send` method returns a tuple `(http_status_code, message)`,
-however you can pass `raise_errors=True` to `SendGridClient` constructor,
-then `.send` method will raise `SendGridClientError` for 4xx errors,
+however you can pass `raise_errors=True` to `SendGridToolkitClient` constructor,
+then `.send` method will raise `SendGridToolkitClientError` for 4xx errors,
 and `SendGridServerError` for 5xx errors.
 
 ```python
-from sendgrid import SendGridError, SendGridClientError, SendGridServerError
+from sendgrid import SendGridError, SendGridToolkitClientError, SendGridServerError
 
-sg = sendgrid.SendGridClient(username, password, raise_errors=True)
+sg = sendgrid.SendGridToolkitClient(username, password, raise_errors=True)
 
 try:
     sg.send(message)

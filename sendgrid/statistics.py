@@ -35,7 +35,7 @@ class GeneralStatistics(object):
 
         """
 
-        self.possible_values = ['days','start_date','end_date','aggregate','category']
+        self.permitted_parameters = ['days','start_date','end_date','aggregate','category']
         self.endpoint = "/api/stats.get.json"        
         self.validate = validate
 
@@ -162,7 +162,7 @@ class AdvancedStatistics(object):
                                       recommended to pass True for forwards compatability.      
         """
         self.endpoint = "/api/stats.getAdvanced.json" 
-        self.possible_values = ['data_type','start_date','end_date','metric','aggregated_by','category','country']
+        self.permitted_parameters = ['data_type','start_date','end_date','metric','aggregated_by','category','country']
         self.validate = validate
         self.data_type = data_type
         self.start_date = start_date

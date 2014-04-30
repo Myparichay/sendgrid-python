@@ -14,13 +14,13 @@ from socket import timeout
 from sendgrid import SendGridClient
 
 
-class SendGridClient(SendGridClient):
+class SendGridToolkitClient(SendGridClient):
     def __init__(self,username,password,**opts):
-        super(SendGridClient, self).__init__(username, password, **opts)
+        super(SendGridToolkitClient, self).__init__(username, password, **opts)
 
     def _build_body(self,data):
         if sys.version_info < (3,0):
-            for k in data.possible_values:
+            for k in data.permitted_parameters:
                 v = getattr(data, k)
                 if isinstance(v, unicode):
                     setattr(data, k, v.encode('utf-8'))
@@ -28,7 +28,7 @@ class SendGridClient(SendGridClient):
                     'api_user':self.username,
                     'api_key' : self.password
                 }
-        for each in data.possible_values:
+        for each in data.permitted_parameters:
             values[each] = getattr(data,each)
         
         for k in list(values.keys()):

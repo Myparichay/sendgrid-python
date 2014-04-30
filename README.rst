@@ -16,7 +16,7 @@ Example
 .. code::
     import sendgrid
 
-    sg = sendgrid.SendGridClient('YOUR_SENDGRID_USERNAME','YOUR_SENDGRID_PASSWORD',endpoint="/api/stats.get.json")
+    sg = sendgrid.SendGridToolkitClient('YOUR_SENDGRID_USERNAME','YOUR_SENDGRID_PASSWORD',endpoint="/api/stats.get.json")
 
 
 example for General Statistics
@@ -93,7 +93,7 @@ Error handling
 ...............
 
 By default, `.send` method returns a tuple `(http_status_code, message)`,
-however you can pass `raise_errors=True` to `SendGridClient` constructor,
+however you can pass `raise_errors=True` to `SendGridToolkitClient` constructor,
 then `.send` method will raise `SendGridClientError` for 4xx errors,
 and `SendGridServerError` for 5xx errors.
 
