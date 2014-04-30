@@ -100,7 +100,7 @@ and `SendGridServerError` for 5xx errors.
 .. code::
     from sendgrid import SendGridError, SendGridClientError, SendGridServerError
 
-    sg = sendgrid.SendGridClient(username, password, raise_errors=True)
+    sg = sendgrid.SendGridToolkitClient(username, password, raise_errors=True)
 
     try:
         sg.send(message)
