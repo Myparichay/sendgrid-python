@@ -10,14 +10,18 @@
 import sys
 import requests
 from socket import timeout
+try:
+    import simplejson as json
+except:
+    import json
 
 from sendgrid import SendGridClient
 
 
 class SendGridToolkitClient(SendGridClient):
-    def __init__(self,username,password,**opts):
+    def __init__(self,username,password,debug=False,**opts):
         super(SendGridToolkitClient, self).__init__(username, password, **opts)
-
+        self.debug = debug
     def _build_body(self,data):
         if sys.version_info < (3,0):
             for k in data.permitted_parameters:
@@ -39,6 +43,9 @@ class SendGridToolkitClient(SendGridClient):
         data_to_send = self._build_body(data)
         headers = {'content-type':'application/x-www-form-urlencoded'}
         r = requests.get(self.mail_url,params=data_to_send,headers=headers)
+        if self.debug:
+            print r.url
+            print r.content
         return r.status_code , r.content
 
     def send(self, data):
